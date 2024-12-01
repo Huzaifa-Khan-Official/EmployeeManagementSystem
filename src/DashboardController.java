@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -186,11 +187,6 @@ public class DashboardController implements Initializable {
     private Label username;
 
     @FXML
-    void addEmployeeAdd(ActionEvent event) {
-
-    }
-
-    @FXML
     void addEmployeeDelete(ActionEvent event) {
 
     }
@@ -296,6 +292,88 @@ public class DashboardController implements Initializable {
     private ResultSet result;
 
     private Image image;
+
+    public void addEmployeeAdd() {
+
+        Date date = new Date();
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+        String sql = "INSERT INTO employee (employee_id, firstName, lastName, gender, phoneNum, position, image, date) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+
+        connect = database.connectDb();
+
+        try {
+
+            Alert alert;
+            if (addEmployee_employeeID.getText().isEmpty()
+                    || addEmployee_firstName.getText().isEmpty()
+                    || addEmployee_lastName.getText().isEmpty()
+                    || addEmployee_gender.getSelectionModel().getSelectedItem() == null
+                    || addEmployee_phoneNum.getText().isEmpty()
+                    || addEmployee_position.getSelectionModel().getSelectedItem() == null
+                    || getData.path == null || getData.path == "") {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else {
+
+                String check = "SELECT employee_id FROM employee WHERE employee_id = '"
+                        + addEmployee_employeeID.getText() + "'";
+
+                statement = connect.createStatement();
+                result = statement.executeQuery(check);
+
+                if (result.next()) {
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Employee ID: " + addEmployee_employeeID.getText() + " was already exist!");
+                    alert.showAndWait();
+                } else {
+                    prepare = connect.prepareStatement(sql);
+                    prepare.setString(1, addEmployee_employeeID.getText());
+                    prepare.setString(2, addEmployee_firstName.getText());
+                    prepare.setString(3, addEmployee_lastName.getText());
+                    prepare.setString(4, (String) addEmployee_gender.getSelectionModel().getSelectedItem());
+                    prepare.setString(5, addEmployee_phoneNum.getText());
+                    prepare.setString(6, (String) addEmployee_position.getSelectionModel().getSelectedItem());
+
+                    String uri = getData.path;
+                    uri = uri.replace("\\", "\\\\");
+
+                    prepare.setString(7, uri);
+                    prepare.setString(8, String.valueOf(sqlDate));
+                    prepare.executeUpdate();
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Added!");
+                    alert.showAndWait();
+
+                    addEmployeeShowListData();
+                    addEmployeeReset();
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addEmployeeReset() {
+        addEmployee_employeeID.setText("");
+        addEmployee_firstName.setText("");
+        addEmployee_lastName.setText("");
+        addEmployee_gender.getSelectionModel().clearSelection();
+        addEmployee_position.getSelectionModel().clearSelection();
+        addEmployee_phoneNum.setText("");
+        addEmployee_image.setImage(null);
+        getData.path = "";
+    }
 
     public void addEmployeeInsertImage() {
         FileChooser open = new FileChooser();
