@@ -66,10 +66,14 @@
                                  </font>
                               </Label>
                               <Line endX="69.0" layoutX="121.0" layoutY="178.0" startX="-100.0" stroke="WHITE" />
-                              <Button fx:id="home_btn" layoutX="16.0" layoutY="207.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboard.css" text="Home">
+                              <Button fx:id="home_btn" layoutX="16.0" layoutY="207.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" stylesheets="@dashboard.css" text="Home">
                                  <graphic>
                                     <FontAwesomeIcon fill="WHITE" glyphName="HOME" size="1.5em" />
                                  </graphic>
+                                 <styleClass>
+                                    <String fx:value="nav-btn" />
+                                    <String fx:value="home_btn" />
+                                 </styleClass>
                               </Button>
                               <Button fx:id="addEmployee_btn" layoutX="16.0" layoutY="242.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@dashboard.css" text="Add Employee">
                                  <graphic>

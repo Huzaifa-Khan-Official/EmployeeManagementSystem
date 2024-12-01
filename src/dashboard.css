@@ -136,6 +136,10 @@
     -fx-background-color:#3357a4;
 }
 
+.home_btn {
+    -fx-background-color: linear-gradient(to bottom right, #3a4368, #28966c);
+}
+
 .update-btn{
     -fx-background-color:#327252;
     -fx-background-radius:8px;
