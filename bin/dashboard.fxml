@@ -16,9 +16,9 @@
          <children>
             <BorderPane layoutX="57.0" layoutY="77.0" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <top>
-                  <AnchorPane prefHeight="45.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <AnchorPane prefHeight="45.0" prefWidth="200.0" styleClass="semi-top-form" stylesheets="@dashboard.css" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane layoutX="37.0" layoutY="-69.0" prefHeight="35.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane layoutX="37.0" layoutY="-69.0" prefHeight="35.0" prefWidth="1000.0" styleClass="top-form" stylesheets="@dashboard.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <FontAwesomeIcon glyphName="USERS" layoutX="14.0" layoutY="27.0" size="1.5em" />
                               <Label layoutX="41.0" layoutY="12.0" text="Employee Management System">
@@ -26,12 +26,12 @@
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </Label>
-                              <Button layoutX="909.0" layoutY="9.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="50.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="11.0">
+                              <Button layoutX="909.0" layoutY="9.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="50.0" styleClass="close" stylesheets="@dashboard.css" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="11.0">
                                  <graphic>
                                     <FontAwesomeIcon glyphName="CLOSE" size="1.2em" />
                                  </graphic>
                               </Button>
-                              <Button layoutX="898.0" layoutY="11.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="50.0">
+                              <Button layoutX="898.0" layoutY="11.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="50.0" styleClass="minimize" stylesheets="@dashboard.css">
                                  <graphic>
                                     <FontAwesomeIcon glyphName="MINUS" size="1.2em" />
                                  </graphic>
