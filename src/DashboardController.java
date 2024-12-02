@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -99,7 +101,7 @@ public class DashboardController implements Initializable {
     private TextField addEmployee_phoneNum;
 
     @FXML
-    private ComboBox<?> addEmployee_position;
+    private ComboBox<String> addEmployee_position;
 
     @FXML
     private TextField addEmployee_search;
@@ -213,26 +215,6 @@ public class DashboardController implements Initializable {
 
         ObservableList listData = FXCollections.observableArrayList(listG);
         addEmployee_gender.setItems(listData);
-    }
-
-    @FXML
-    void addEmployeeDelete(ActionEvent event) {
-
-    }
-
-    @FXML
-    void addEmployeeReset(ActionEvent event) {
-
-    }
-
-    @FXML
-    void addEmployeeSearch(KeyEvent event) {
-
-    }
-
-    @FXML
-    void addEmployeeUpdate(ActionEvent event) {
-
     }
 
     @FXML
@@ -351,21 +333,6 @@ public class DashboardController implements Initializable {
                     alert.setContentText("Employee ID: " + addEmployee_employeeID.getText() + " was already exist!");
                     alert.showAndWait();
                 } else {
-                    // prepare = connect.prepareStatement(sql);
-                    // prepare.setString(1, addEmployee_employeeID.getText());
-                    // prepare.setString(2, addEmployee_firstName.getText());
-                    // prepare.setString(3, addEmployee_lastName.getText());
-                    // prepare.setString(4, (String) addEmployee_gender.getSelectionModel().getSelectedItem());
-                    // prepare.setString(5, addEmployee_phoneNum.getText());
-                    // prepare.setString(6, (String) addEmployee_position.getSelectionModel().getSelectedItem());
-
-                    // String uri = getData.path;
-                    // uri = uri.replace("\\", "\\\\");
-
-                    // prepare.setString(7, uri);
-                    // prepare.setString(8, String.valueOf(sqlDate));
-                    // prepare.executeUpdate();
-
                     prepare = connect.prepareStatement(sql);
                     prepare.setString(1, addEmployee_employeeID.getText());
                     prepare.setString(2, addEmployee_firstName.getText());
@@ -380,7 +347,6 @@ public class DashboardController implements Initializable {
                     prepare.setString(7, uri);
                     prepare.setString(8, String.valueOf(sqlDate));
                     prepare.executeUpdate();
-
 
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Information Message");
@@ -404,10 +370,152 @@ public class DashboardController implements Initializable {
         addEmployee_firstName.setText("");
         addEmployee_lastName.setText("");
         addEmployee_gender.getSelectionModel().clearSelection();
-        addEmployee_position.getSelectionModel().clearSelection();
+        // addEmployee_position.getSelectionModel().clearSelection();
+        addEmployee_position.setValue("Choose");
         addEmployee_phoneNum.setText("");
         addEmployee_image.setImage(null);
         getData.path = "";
+    }
+
+    public void addEmployeeUpdate() {
+
+        String uri = getData.path;
+        uri = uri.replace("\\", "\\\\");
+
+        Date date = new Date();
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+        String sql = "UPDATE employee SET firstName = '"
+                + addEmployee_firstName.getText() + "', lastName = '"
+                + addEmployee_lastName.getText() + "', gender = '"
+                + addEmployee_gender.getSelectionModel().getSelectedItem() + "', phoneNum = '"
+                + addEmployee_phoneNum.getText() + "', position = '"
+                + addEmployee_position.getSelectionModel().getSelectedItem() + "', image = '"
+                + uri + "', date = '" + sqlDate + "' WHERE employee_id ='"
+                + addEmployee_employeeID.getText() + "'";
+
+        connect = database.connectDb();
+
+        try {
+            Alert alert;
+            if (addEmployee_employeeID.getText().isEmpty()
+                    || addEmployee_firstName.getText().isEmpty()
+                    || addEmployee_lastName.getText().isEmpty()
+                    || addEmployee_gender.getSelectionModel().getSelectedItem() == null
+                    || addEmployee_phoneNum.getText().isEmpty()
+                    || addEmployee_position.getSelectionModel().getSelectedItem() == null
+                    || getData.path == null || getData.path == "") {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else {
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Cofirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Are you sure you want to UPDATE Employee ID: " + addEmployee_employeeID.getText() + "?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.OK)) {
+                    statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+
+                    // double salary = 0;
+
+                    // String checkData = "SELECT * FROM employee_info WHERE employee_id = '"
+                    // + addEmployee_employeeID.getText() + "'";
+
+                    // prepare = connect.prepareStatement(checkData);
+                    // result = prepare.executeQuery();
+
+                    // while (result.next()) {
+                    // salary = result.getDouble("salary");
+                    // }
+
+                    // String updateInfo = "UPDATE employee_info SET firstName = '"
+                    // + addEmployee_firstName.getText() + "', lastName = '"
+                    // + addEmployee_lastName.getText() + "', position = '"
+                    // + addEmployee_position.getSelectionModel().getSelectedItem()
+                    // + "' WHERE employee_id = '"
+                    // + addEmployee_employeeID.getText() + "'";
+
+                    // prepare = connect.prepareStatement(updateInfo);
+                    // prepare.executeUpdate();
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Updated!");
+                    alert.showAndWait();
+
+                    addEmployeeShowListData();
+                    addEmployeeReset();
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void addEmployeeDelete() {
+        String sql = "DELETE FROM employee WHERE employee_id = '"
+                + addEmployee_employeeID.getText() + "'";
+
+        connect = database.connectDb();
+
+        try {
+
+            Alert alert;
+            if (addEmployee_employeeID.getText().isEmpty()
+                    || addEmployee_firstName.getText().isEmpty()
+                    || addEmployee_lastName.getText().isEmpty()
+                    || addEmployee_gender.getSelectionModel().getSelectedItem() == null
+                    || addEmployee_phoneNum.getText().isEmpty()
+                    || addEmployee_position.getSelectionModel().getSelectedItem() == null
+                    || getData.path == null || getData.path == "") {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            } else {
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Cofirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Are you sure you want to DELETE Employee ID: " + addEmployee_employeeID.getText() + "?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.OK)) {
+                    statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+
+                    // String deleteInfo = "DELETE FROM employee_info WHERE employee_id = '"
+                    // + addEmployee_employeeID.getText() + "'";
+
+                    // prepare = connect.prepareStatement(deleteInfo);
+                    // prepare.executeUpdate();
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Deleted!");
+                    alert.showAndWait();
+
+                    addEmployeeShowListData();
+                    addEmployeeReset();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addEmployeeInsertImage() {
@@ -476,6 +584,8 @@ public class DashboardController implements Initializable {
         addEmployee_firstName.setText(employeeD.getFirstName());
         addEmployee_lastName.setText(employeeD.getLastName());
         addEmployee_phoneNum.setText(employeeD.getPhoneNum());
+
+        getData.path = employeeD.getImage();
 
         String uri = "file:" + employeeD.getImage();
         image = new Image(uri, 101, 127, false, true);
