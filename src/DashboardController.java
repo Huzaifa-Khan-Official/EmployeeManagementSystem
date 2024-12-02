@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -186,18 +188,35 @@ public class DashboardController implements Initializable {
     @FXML
     private Label username;
 
+    private String[] positionList = { "Marketer Coordinator", "Web Developer (Back End)", "Web Developer (Front End)",
+            "App Developer" };
+
+    public void addEmployeePositionList() {
+        List<String> listP = new ArrayList<>();
+
+        for (String data : positionList) {
+            listP.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listP);
+        addEmployee_position.setItems(listData);
+    }
+
+    private String[] listGender = { "Male", "Female", "Others" };
+
+    public void addEmployeeGendernList() {
+        List<String> listG = new ArrayList<>();
+
+        for (String data : listGender) {
+            listG.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listG);
+        addEmployee_gender.setItems(listData);
+    }
+
     @FXML
     void addEmployeeDelete(ActionEvent event) {
-
-    }
-
-    @FXML
-    void addEmployeeGendernList(ActionEvent event) {
-
-    }
-
-    @FXML
-    void addEmployeePositionList(ActionEvent event) {
 
     }
 
@@ -298,7 +317,7 @@ public class DashboardController implements Initializable {
         Date date = new Date();
         java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 
-        String sql = "INSERT INTO employee (employee_id, firstName, lastName, gender, phoneNum, position, image, date) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO employee (employee_id,firstName,lastName,gender,phoneNum,position,image,date) VALUES(?,?,?,?,?,?,?,?)";
 
         connect = database.connectDb();
 
@@ -332,6 +351,21 @@ public class DashboardController implements Initializable {
                     alert.setContentText("Employee ID: " + addEmployee_employeeID.getText() + " was already exist!");
                     alert.showAndWait();
                 } else {
+                    // prepare = connect.prepareStatement(sql);
+                    // prepare.setString(1, addEmployee_employeeID.getText());
+                    // prepare.setString(2, addEmployee_firstName.getText());
+                    // prepare.setString(3, addEmployee_lastName.getText());
+                    // prepare.setString(4, (String) addEmployee_gender.getSelectionModel().getSelectedItem());
+                    // prepare.setString(5, addEmployee_phoneNum.getText());
+                    // prepare.setString(6, (String) addEmployee_position.getSelectionModel().getSelectedItem());
+
+                    // String uri = getData.path;
+                    // uri = uri.replace("\\", "\\\\");
+
+                    // prepare.setString(7, uri);
+                    // prepare.setString(8, String.valueOf(sqlDate));
+                    // prepare.executeUpdate();
+
                     prepare = connect.prepareStatement(sql);
                     prepare.setString(1, addEmployee_employeeID.getText());
                     prepare.setString(2, addEmployee_firstName.getText());
@@ -346,6 +380,7 @@ public class DashboardController implements Initializable {
                     prepare.setString(7, uri);
                     prepare.setString(8, String.valueOf(sqlDate));
                     prepare.executeUpdate();
+
 
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Information Message");
@@ -469,6 +504,9 @@ public class DashboardController implements Initializable {
             home_btn.setStyle("-fx-background-color: transparent;");
             addEmployee_btn.setStyle("-fx-background-color: linear-gradient(to bottom right, #3a4368, #28966c);");
             salary_btn.setStyle("-fx-background-color: transparent;");
+
+            addEmployeePositionList();
+            addEmployeeGendernList();
         } else if (event.getSource() == salary_btn) {
             home_form.setVisible(false);
             addEmployee_form.setVisible(false);
@@ -484,5 +522,8 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resources) {
         addEmployeeShowListData();
         displayUsername();
+
+        addEmployeePositionList();
+        addEmployeeGendernList();
     }
 }
