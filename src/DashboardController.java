@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -592,6 +593,35 @@ public class DashboardController implements Initializable {
         addEmployee_image.setImage(image);
     }
 
+    public void addEmployeeSearch() {
+        FilteredList<employeeData> filter = new FilteredList<>(addEmployeeList, e -> true);
+
+        addEmployee_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+
+            filter.setPredicate(predicateEmployeeData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String searchKey = newValue.toLowerCase();
+
+                boolean matchesId = predicateEmployeeData.getEmployeeId() != null
+                        && predicateEmployeeData.getEmployeeId().toString().contains(searchKey);
+                boolean matchesName = ((predicateEmployeeData.getFirstName() != null
+                        && predicateEmployeeData.getFirstName().toLowerCase().contains(searchKey)) ||
+                        (predicateEmployeeData.getLastName() != null
+                                && predicateEmployeeData.getLastName().toLowerCase().contains(searchKey)));
+
+                return matchesId || matchesName;
+            });
+
+            SortedList<employeeData> sortList = new SortedList<>(filter);
+            sortList.comparatorProperty().bind(addEmployee_tableView.comparatorProperty());
+
+            addEmployee_tableView.setItems(sortList);
+        });
+    }
+
     public void displayUsername() {
         username.setText(getData.username);
     }
@@ -617,6 +647,7 @@ public class DashboardController implements Initializable {
 
             addEmployeePositionList();
             addEmployeeGendernList();
+            addEmployeeSearch();
         } else if (event.getSource() == salary_btn) {
             home_form.setVisible(false);
             addEmployee_form.setVisible(false);
