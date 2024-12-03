@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -191,8 +192,7 @@ public class DashboardController implements Initializable {
     @FXML
     private Label username;
 
-    private String[] positionList = { "Marketer Coordinator", "Web Developer (Back End)", "Web Developer (Front End)",
-            "App Developer" };
+    private String[] positionList = { "Marketer Coordinator", "Web Developer (Back End)", "Web Developer (Front End)", "App Developer" };
 
     public void addEmployeePositionList() {
         List<String> listP = new ArrayList<>();
@@ -279,6 +279,97 @@ public class DashboardController implements Initializable {
     private ResultSet result;
 
     private Image image;
+
+    public void homeTotalEmployees() {
+
+        String sql = "SELECT COUNT(id) FROM employee";
+
+        connect = database.connectDb();
+        int countData = 0;
+        try {
+
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                countData = result.getInt("COUNT(id)");
+            }
+
+            home_totalEmployees.setText(String.valueOf(countData));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void homeEmployeeTotalPresent() {
+
+        String sql = "SELECT COUNT(id) FROM employee_info";
+
+        connect = database.connectDb();
+        int countData = 0;
+        try {
+            statement = connect.createStatement();
+            result = statement.executeQuery(sql);
+
+            while (result.next()) {
+                countData = result.getInt("COUNT(id)");
+            }
+            home_totalPresents.setText(String.valueOf(countData));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void homeTotalInactive() {
+
+        String sql = "SELECT COUNT(id) FROM employee_info WHERE salary = '0.0'";
+
+        connect = database.connectDb();
+        int countData = 0;
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                countData = result.getInt("COUNT(id)");
+            }
+            home_totalInactiveEm.setText(String.valueOf(countData));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void homeChart() {
+
+        home_chart.getData().clear();
+
+        String sql = "SELECT date, COUNT(id) FROM employee GROUP BY date ORDER BY TIMESTAMP(date) ASC LIMIT 7";
+
+        connect = database.connectDb();
+
+        try {
+            XYChart.Series chart = new XYChart.Series();
+
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                chart.getData().add(new XYChart.Data(result.getString(1), result.getInt(2)));
+            }
+
+            home_chart.getData().add(chart);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public void addEmployeeAdd() {
 
@@ -732,6 +823,11 @@ public class DashboardController implements Initializable {
             home_btn.setStyle("-fx-background-color: linear-gradient(to bottom right, #3a4368, #28966c);");
             addEmployee_btn.setStyle("-fx-background-color: transparent;");
             salary_btn.setStyle("-fx-background-color: transparent;");
+
+            homeTotalEmployees();
+            homeEmployeeTotalPresent();
+            homeTotalInactive();
+            homeChart();
         } else if (event.getSource() == addEmployee_btn) {
             home_form.setVisible(false);
             addEmployee_form.setVisible(true);
@@ -761,6 +857,11 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resources) {
         addEmployeeShowListData();
         displayUsername();
+
+        homeTotalEmployees();
+        homeEmployeeTotalPresent();
+        homeTotalInactive();
+        homeChart();
 
         addEmployeePositionList();
         addEmployeeGendernList();
