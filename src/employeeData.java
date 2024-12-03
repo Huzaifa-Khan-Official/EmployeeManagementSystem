@@ -9,8 +9,10 @@ public class employeeData {
     private String position;
     private String image;
     private Date date;
+    private Double salary;
 
-    public employeeData(Integer employeeId, String firstName, String lastName, String gender, String phoneNum, String position, String image, Date date) {
+    public employeeData(Integer employeeId, String firstName, String lastName, String gender, String phoneNum,
+            String position, String image, Date date) {
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -20,6 +22,14 @@ public class employeeData {
         this.image = image;
         this.date = date;
     };
+
+    public employeeData(Integer employeeId, String firstName, String lastName, String position, Double salary) {
+        this.employeeId = employeeId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.position = position;
+        this.salary = salary;
+    }
 
     public Integer getEmployeeId() {
         return employeeId;
@@ -51,5 +61,9 @@ public class employeeData {
 
     public Date getDate() {
         return date;
+    }
+
+    public Double getSalary() {
+        return salary;
     }
 }
