@@ -1,6 +1,6 @@
 import java.sql.Date;
 
-public class employeeData {
+public class EmployeeData {
     private Integer employeeId;
     private String firstName;
     private String lastName;
@@ -11,7 +11,7 @@ public class employeeData {
     private Date date;
     private Double salary;
 
-    public employeeData(Integer employeeId, String firstName, String lastName, String gender, String phoneNum,
+    public EmployeeData(Integer employeeId, String firstName, String lastName, String gender, String phoneNum,
             String position, String image, Date date) {
         this.employeeId = employeeId;
         this.firstName = firstName;
@@ -23,7 +23,7 @@ public class employeeData {
         this.date = date;
     };
 
-    public employeeData(Integer employeeId, String firstName, String lastName, String position, Double salary) {
+    public EmployeeData(Integer employeeId, String firstName, String lastName, String position, Double salary) {
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;

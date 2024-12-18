@@ -55,25 +55,25 @@ public class DashboardController implements Initializable {
     private Button addEmployee_clearBtn;
 
     @FXML
-    private TableColumn<employeeData, String> addEmployee_col_date;
+    private TableColumn<EmployeeData, String> addEmployee_col_date;
 
     @FXML
-    private TableColumn<employeeData, String> addEmployee_col_employeeID;
+    private TableColumn<EmployeeData, String> addEmployee_col_employeeID;
 
     @FXML
-    private TableColumn<employeeData, String> addEmployee_col_firstName;
+    private TableColumn<EmployeeData, String> addEmployee_col_firstName;
 
     @FXML
-    private TableColumn<employeeData, String> addEmployee_col_gender;
+    private TableColumn<EmployeeData, String> addEmployee_col_gender;
 
     @FXML
-    private TableColumn<employeeData, String> addEmployee_col_lastName;
+    private TableColumn<EmployeeData, String> addEmployee_col_lastName;
 
     @FXML
-    private TableColumn<employeeData, String> addEmployee_col_phoneNum;
+    private TableColumn<EmployeeData, String> addEmployee_col_phoneNum;
 
     @FXML
-    private TableColumn<employeeData, String> addEmployee_col_position;
+    private TableColumn<EmployeeData, String> addEmployee_col_position;
 
     @FXML
     private Button addEmployee_deleteBtn;
@@ -109,7 +109,7 @@ public class DashboardController implements Initializable {
     private TextField addEmployee_search;
 
     @FXML
-    private TableView<employeeData> addEmployee_tableView;
+    private TableView<EmployeeData> addEmployee_tableView;
 
     @FXML
     private Button addEmployee_updateBtn;
@@ -151,19 +151,19 @@ public class DashboardController implements Initializable {
     private Button salary_clearBtn;
 
     @FXML
-    private TableColumn<employeeData, String> salary_col_employeeID;
+    private TableColumn<EmployeeData, String> salary_col_employeeID;
 
     @FXML
-    private TableColumn<employeeData, String> salary_col_firstName;
+    private TableColumn<EmployeeData, String> salary_col_firstName;
 
     @FXML
-    private TableColumn<employeeData, String> salary_col_lastName;
+    private TableColumn<EmployeeData, String> salary_col_lastName;
 
     @FXML
-    private TableColumn<employeeData, String> salary_col_position;
+    private TableColumn<EmployeeData, String> salary_col_position;
 
     @FXML
-    private TableColumn<employeeData, String> salary_col_salary;
+    private TableColumn<EmployeeData, String> salary_col_salary;
 
     @FXML
     private TextField salary_employeeID;
@@ -184,7 +184,7 @@ public class DashboardController implements Initializable {
     private TextField salary_salary;
 
     @FXML
-    private TableView<employeeData> salary_tableView;
+    private TableView<EmployeeData> salary_tableView;
 
     @FXML
     private Button salary_updateBtn;
@@ -280,6 +280,7 @@ public class DashboardController implements Initializable {
 
     private Image image;
 
+    // HARIS WORK
     public void homeTotalEmployees() {
 
         String sql = "SELECT COUNT(id) FROM employee";
@@ -371,6 +372,7 @@ public class DashboardController implements Initializable {
 
     }
 
+    // AHMED ABBASI WORK
     public void addEmployeeAdd() {
 
         Date date = new Date();
@@ -617,8 +619,8 @@ public class DashboardController implements Initializable {
         }
     }
 
-    public ObservableList<employeeData> addEmployeeListData() {
-        ObservableList<employeeData> listData = FXCollections.observableArrayList();
+    public ObservableList<EmployeeData> addEmployeeListData() {
+        ObservableList<EmployeeData> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM employee";
 
         connect = database.connectDb();
@@ -626,10 +628,10 @@ public class DashboardController implements Initializable {
         try {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
-            employeeData employeeD;
+            EmployeeData employeeD;
 
             while (result.next()) {
-                employeeD = new employeeData(result.getInt("employee_id"), result.getString("firstName"),
+                employeeD = new EmployeeData(result.getInt("employee_id"), result.getString("firstName"),
                         result.getString("lastName"), result.getString("gender"), result.getString("phoneNum"),
                         result.getString("position"), result.getString("image"), result.getDate("date"));
 
@@ -642,7 +644,7 @@ public class DashboardController implements Initializable {
         return listData;
     }
 
-    private ObservableList<employeeData> addEmployeeList;
+    private ObservableList<EmployeeData> addEmployeeList;
 
     public void addEmployeeShowListData() {
         addEmployeeList = addEmployeeListData();
@@ -660,7 +662,7 @@ public class DashboardController implements Initializable {
     }
 
     public void addEmployeeSelect() {
-        employeeData employeeD = addEmployee_tableView.getSelectionModel().getSelectedItem();
+        EmployeeData employeeD = addEmployee_tableView.getSelectionModel().getSelectedItem();
         int num = addEmployee_tableView.getSelectionModel().getSelectedIndex();
 
         if ((num - 1) < -1) {
@@ -680,7 +682,7 @@ public class DashboardController implements Initializable {
     }
 
     public void addEmployeeSearch() {
-        FilteredList<employeeData> filter = new FilteredList<>(addEmployeeList, e -> true);
+        FilteredList<EmployeeData> filter = new FilteredList<>(addEmployeeList, e -> true);
 
         addEmployee_search.textProperty().addListener((Observable, oldValue, newValue) -> {
 
@@ -701,15 +703,17 @@ public class DashboardController implements Initializable {
                 return matchesId || matchesName;
             });
 
-            SortedList<employeeData> sortList = new SortedList<>(filter);
+            SortedList<EmployeeData> sortList = new SortedList<>(filter);
             sortList.comparatorProperty().bind(addEmployee_tableView.comparatorProperty());
 
             addEmployee_tableView.setItems(sortList);
         });
     }
 
-    public ObservableList<employeeData> salaryListData() {
-        ObservableList<employeeData> listData = FXCollections.observableArrayList();
+
+    // AHEED WORK
+    public ObservableList<EmployeeData> salaryListData() {
+        ObservableList<EmployeeData> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM employee_info";
 
         connect = database.connectDb();
@@ -718,10 +722,10 @@ public class DashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            employeeData employeeD;
+            EmployeeData employeeD;
 
             while (result.next()) {
-                employeeD = new employeeData(result.getInt("employee_id"), result.getString("firstName"),
+                employeeD = new EmployeeData(result.getInt("employee_id"), result.getString("firstName"),
                         result.getString("lastName"), result.getString("position"), result.getDouble("salary"));
 
                 listData.add(employeeD);
@@ -733,7 +737,7 @@ public class DashboardController implements Initializable {
         return listData;
     }
 
-    private ObservableList<employeeData> salaryList;
+    private ObservableList<EmployeeData> salaryList;
 
     public void salaryShowListData() {
         salaryList = salaryListData();
@@ -749,7 +753,7 @@ public class DashboardController implements Initializable {
 
     public void salarySelect() {
 
-        employeeData employeeD = salary_tableView.getSelectionModel().getSelectedItem();
+        EmployeeData employeeD = salary_tableView.getSelectionModel().getSelectedItem();
         int num = salary_tableView.getSelectionModel().getSelectedIndex();
 
         if ((num - 1) < -1) {
