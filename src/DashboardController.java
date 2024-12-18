@@ -710,7 +710,6 @@ public class DashboardController implements Initializable {
         });
     }
 
-
     // AHEED WORK
     public ObservableList<EmployeeData> salaryListData() {
         ObservableList<EmployeeData> listData = FXCollections.observableArrayList();
